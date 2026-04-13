@@ -4,84 +4,129 @@
 // 요구사항: 아침엔 팬케이크 하우스 메뉴, 점심에는 객체마을 메뉴 사용
 
 class MenuItem {
-	name: string;
-	description: string;
-	vegetarian: boolean;
-	price: number;
+  name: string;
+  description: string;
+  vegetarian: boolean;
+  price: number;
 
-	constructor(name: string, description: string, vegetarian: boolean, price: number) {
-		this.name = name;
-		this.description = description;
-		this.vegetarian = vegetarian;
-		this.price = price;
-	}
+  constructor(
+    name: string,
+    description: string,
+    vegetarian: boolean,
+    price: number,
+  ) {
+    this.name = name;
+    this.description = description;
+    this.vegetarian = vegetarian;
+    this.price = price;
+  }
 
-	getName(): string {
-		return this.name;
-	}
+  getName(): string {
+    return this.name;
+  }
 
-	getDescription(): string {
-		return this.description;
-	}
+  getDescription(): string {
+    return this.description;
+  }
 
-	isVegetarian(): boolean {
-		return this.vegetarian;
-	}
+  isVegetarian(): boolean {
+    return this.vegetarian;
+  }
 
-	getPrice(): number {
-		return this.price;
-	}
+  getPrice(): number {
+    return this.price;
+  }
 }
 
 class PancakeHouseMenu {
-	menuItems: Map<number, MenuItem> = new Map<number, MenuItem>();
-	count = 0;
+  menuItems: Map<number, MenuItem> = new Map<number, MenuItem>();
+  count = 0;
 
-	constructor() {
-		this.addItem('K&B 팬케이크 세트', '스크램블드 에그와 토스트가 곁들여진 팬케이크', false, 2.99);
-		this.addItem('레귤러 팬케이크 세트', '달걀 후라이와 소시지가 곁들여진 팬케이크', false, 3.49);
-		this.addItem('브레드 팬케이크', '취향에 따라 브레드를 선택할 수 있는 팬케이크', true, 3.59);
-	}
+  constructor() {
+    this.addItem(
+      "K&B 팬케이크 세트",
+      "스크램블드 에그와 토스트가 곁들여진 팬케이크",
+      false,
+      2.99,
+    );
+    this.addItem(
+      "레귤러 팬케이크 세트",
+      "달걀 후라이와 소시지가 곁들여진 팬케이크",
+      false,
+      3.49,
+    );
+    this.addItem(
+      "브레드 팬케이크",
+      "취향에 따라 브레드를 선택할 수 있는 팬케이크",
+      true,
+      3.59,
+    );
+  }
 
-	addItem(name: string, description: string, vegetarian: boolean, price: number) {
-		this.menuItems.set(this.count, new MenuItem(name, description, vegetarian, price));
-		this.count++;
-	}
+  addItem(
+    name: string,
+    description: string,
+    vegetarian: boolean,
+    price: number,
+  ) {
+    this.menuItems.set(
+      this.count,
+      new MenuItem(name, description, vegetarian, price),
+    );
+    this.count++;
+  }
 
-	getMenuItems(): Map<number, MenuItem> {
-		return this.menuItems;
-	}
+  getMenuItems(): Map<number, MenuItem> {
+    return this.menuItems;
+  }
 
-	//....기타 메소드들
+  //....기타 메소드들
 }
 
 class DinerMenu {
-	static readonly MAX_ITEMS = 6;
-	numberOfItems = 0;
-	menuItems: MenuItem[];
+  static readonly MAX_ITEMS = 6;
+  numberOfItems = 0;
+  menuItems: MenuItem[];
 
-	constructor() {
-		this.menuItems = new Array<MenuItem>(DinerMenu.MAX_ITEMS);
+  constructor() {
+    this.menuItems = new Array<MenuItem>(DinerMenu.MAX_ITEMS);
 
-		this.addItem('채식주의자용 채식주의자용 메뉴', '채식주의자용 메뉴', true, 3.99);
-		this.addItem('채식주의자용 채식주의자용 메뉴', '채식주의자용 메뉴', true, 3.99);
-	}
+    this.addItem(
+      "채식주의자용 채식주의자용 메뉴",
+      "채식주의자용 메뉴",
+      true,
+      3.99,
+    );
+    this.addItem(
+      "채식주의자용 채식주의자용 메뉴",
+      "채식주의자용 메뉴",
+      true,
+      3.99,
+    );
+  }
 
-	addItem(name: string, description: string, vegetarian: boolean, price: number) {
-		const menuItem = new MenuItem(name, description, vegetarian, price);
-		if (this.numberOfItems >= DinerMenu.MAX_ITEMS) {
-			console.log('죄송합니다, 메뉴가 꽉 찼습니다. 더 이상 추가할 수 없습니다.');
-		} else {
-			this.menuItems[this.numberOfItems] = menuItem;
-			this.numberOfItems++;
-		}
-	}
+  addItem(
+    name: string,
+    description: string,
+    vegetarian: boolean,
+    price: number,
+  ) {
+    const menuItem = new MenuItem(name, description, vegetarian, price);
+    if (this.numberOfItems >= DinerMenu.MAX_ITEMS) {
+      console.log(
+        "죄송합니다, 메뉴가 꽉 찼습니다. 더 이상 추가할 수 없습니다.",
+      );
+    } else {
+      this.menuItems[this.numberOfItems] = menuItem;
+      this.numberOfItems++;
+    }
+  }
 
-	getMenuItems(): MenuItem[] {
-		return this.menuItems;
-	}
+  getMenuItems(): MenuItem[] {
+    return this.menuItems;
+  }
 
-	//....기타 메소드들
+  //....기타 메소드들
 }
 
 // 자바 종업원의 자격 요건
@@ -99,159 +144,205 @@ const breakfastItems = pancakeHouseMenu.getMenuItems();
 const dinerMenu = new DinerMenu();
 const lunchItems = dinerMenu.getMenuItems();
 
-console.log('=== 아침 메뉴 ===');
+console.log("=== 아침 메뉴 ===");
 for (let i = 0; i < breakfastItems.size; i++) {
-	console.log(breakfastItems.get(i)?.getName());
-	console.log(breakfastItems.get(i)?.getDescription());
-	console.log(breakfastItems.get(i)?.getPrice());
+  console.log(breakfastItems.get(i)?.getName());
+  console.log(breakfastItems.get(i)?.getDescription());
+  console.log(breakfastItems.get(i)?.getPrice());
 }
 
-console.log('\n=== 점심 메뉴 ===');
+console.log("\n=== 점심 메뉴 ===");
 for (let i = 0; i < lunchItems.length; i++) {
-	console.log(lunchItems[i]?.getName());
-	console.log(lunchItems[i]?.getDescription());
-	console.log(lunchItems[i]?.getPrice());
+  console.log(lunchItems[i]?.getName());
+  console.log(lunchItems[i]?.getDescription());
+  console.log(lunchItems[i]?.getPrice());
 }
 
 // 위코드의 문제점: 두 메소드의 리턴 형식이 다르기에 각 항목에서 반복 작업을 수행하려면 2개의 순환문을 써야힘
 
 // 반복화를 캡슐화 하기
 interface Iterator<T> {
-	hasNext(): boolean; //반복 작업을 적용할 대상이 있는지 확인
-	next(): T; // 다음 객체를 return
+  hasNext(): boolean; //반복 작업을 적용할 대상이 있는지 확인
+  next(): T; // 다음 객체를 return
 }
 
 // 이 인터페이스가 있으면 배열, 리스트, 해시테이블등 모든 종류의 객체 컬렉션에 반복자를 구현할 수 있음.
 
 class DinerMenuIterator implements Iterator<MenuItem> {
-	items: MenuItem[];
-	position = 0;
+  items: MenuItem[];
+  position = 0;
 
-	constructor(items: MenuItem[]) {
-		this.items = items;
-	}
+  constructor(items: MenuItem[]) {
+    this.items = items;
+  }
 
-	next(): MenuItem {
-		const menuItem = this.items[this.position];
-		this.position++;
-		return menuItem!;
-	}
+  next(): MenuItem {
+    const menuItem = this.items[this.position];
+    this.position++;
+    return menuItem!;
+  }
 
-	hasNext(): boolean {
-		if (this.position >= this.items.length || this.items[this.position] === undefined) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+  hasNext(): boolean {
+    if (
+      this.position >= this.items.length ||
+      this.items[this.position] === undefined
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
 
 class PancakeHouseMenuIterator implements Iterator<MenuItem> {
-	items: Map<number, MenuItem>;
-	position = 0;
+  items: Map<number, MenuItem>;
+  position = 0;
 
-	constructor(items: Map<number, MenuItem>) {
-		this.items = items;
-	}
+  constructor(items: Map<number, MenuItem>) {
+    this.items = items;
+  }
 
-	hasNext(): boolean {
-		if (this.position >= this.items.size || this.items.get(this.position) === undefined) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+  hasNext(): boolean {
+    if (
+      this.position >= this.items.size ||
+      this.items.get(this.position) === undefined
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
-	next(): MenuItem {
-		const menuItem = this.items.get(this.position);
-		this.position++;
-		return menuItem!;
-	}
+  next(): MenuItem {
+    const menuItem = this.items.get(this.position);
+    this.position++;
+    return menuItem!;
+  }
 }
 
 class DinerMenu_ {
-	static readonly MAX_ITEMS = 6;
-	numberOfItems = 0;
-	menuItems: MenuItem[];
+  static readonly MAX_ITEMS = 6;
+  numberOfItems = 0;
+  menuItems: MenuItem[];
 
-	constructor() {
-		this.menuItems = new Array<MenuItem>(DinerMenu.MAX_ITEMS);
+  constructor() {
+    this.menuItems = new Array<MenuItem>(DinerMenu.MAX_ITEMS);
 
-		this.addItem('채식주의자용 BLT', '통밀 위에 베이컨, 상추, 토마토를 얹은 메뉴', true, 3.99);
-		this.addItem('BLT', '통밀 위에 베이컨, 상추, 토마토를 얹은 메뉴', false, 2.99);
-		this.addItem('오늘의 스프', '감자 조림과 토마토 샐러드', false, 3.29);
-		this.addItem('핫도그', '핫도그와 감자튀김', false, 3.05);
-	}
+    this.addItem(
+      "채식주의자용 BLT",
+      "통밀 위에 베이컨, 상추, 토마토를 얹은 메뉴",
+      true,
+      3.99,
+    );
+    this.addItem(
+      "BLT",
+      "통밀 위에 베이컨, 상추, 토마토를 얹은 메뉴",
+      false,
+      2.99,
+    );
+    this.addItem("오늘의 스프", "감자 조림과 토마토 샐러드", false, 3.29);
+    this.addItem("핫도그", "핫도그와 감자튀김", false, 3.05);
+  }
 
-	addItem(name: string, description: string, vegetarian: boolean, price: number) {
-		const menuItem = new MenuItem(name, description, vegetarian, price);
-		if (this.numberOfItems >= DinerMenu.MAX_ITEMS) {
-			console.log('죄송합니다, 메뉴가 꽉 찼습니다. 더 이상 추가할 수 없습니다.');
-		} else {
-			this.menuItems[this.numberOfItems] = menuItem;
-			this.numberOfItems++;
-		}
-	}
+  addItem(
+    name: string,
+    description: string,
+    vegetarian: boolean,
+    price: number,
+  ) {
+    const menuItem = new MenuItem(name, description, vegetarian, price);
+    if (this.numberOfItems >= DinerMenu.MAX_ITEMS) {
+      console.log(
+        "죄송합니다, 메뉴가 꽉 찼습니다. 더 이상 추가할 수 없습니다.",
+      );
+    } else {
+      this.menuItems[this.numberOfItems] = menuItem;
+      this.numberOfItems++;
+    }
+  }
 
-	// getMenuItems(): MenuItem[] {
-	// 	return this.menuItems;
-	// }
+  // getMenuItems(): MenuItem[] {
+  // 	return this.menuItems;
+  // }
 
-	createIterator(): Iterator<MenuItem> {
-		return new DinerMenuIterator(this.menuItems);
-	}
+  createIterator(): Iterator<MenuItem> {
+    return new DinerMenuIterator(this.menuItems);
+  }
 }
 
 class PancakeHouseMenu_ {
-	menuItems: Map<number, MenuItem> = new Map<number, MenuItem>();
-	count = 0;
+  menuItems: Map<number, MenuItem> = new Map<number, MenuItem>();
+  count = 0;
 
-	constructor() {
-		this.addItem('K&B 팬케이크 세트', '스크램블드 에그와 토스트가 곁들여진 팬케이크', false, 2.99);
-		this.addItem('레귤러 팬케이크 세트', '달걀 후라이와 소시지가 곁들여진 팬케이크', false, 3.49);
-		this.addItem('브레드 팬케이크', '취향에 따라 브레드를 선택할 수 있는 팬케이크', true, 3.59);
-	}
+  constructor() {
+    this.addItem(
+      "K&B 팬케이크 세트",
+      "스크램블드 에그와 토스트가 곁들여진 팬케이크",
+      false,
+      2.99,
+    );
+    this.addItem(
+      "레귤러 팬케이크 세트",
+      "달걀 후라이와 소시지가 곁들여진 팬케이크",
+      false,
+      3.49,
+    );
+    this.addItem(
+      "브레드 팬케이크",
+      "취향에 따라 브레드를 선택할 수 있는 팬케이크",
+      true,
+      3.59,
+    );
+  }
 
-	addItem(name: string, description: string, vegetarian: boolean, price: number) {
-		this.menuItems.set(this.count, new MenuItem(name, description, vegetarian, price));
-		this.count++;
-	}
+  addItem(
+    name: string,
+    description: string,
+    vegetarian: boolean,
+    price: number,
+  ) {
+    this.menuItems.set(
+      this.count,
+      new MenuItem(name, description, vegetarian, price),
+    );
+    this.count++;
+  }
 
-	createIterator(): Iterator<MenuItem> {
-		return new PancakeHouseMenuIterator(this.menuItems);
-	}
+  createIterator(): Iterator<MenuItem> {
+    return new PancakeHouseMenuIterator(this.menuItems);
+  }
 
-	//....기타 메소드들
+  //....기타 메소드들
 }
 
 class Waitress {
-	pancakeHouseMenu: Menu;
-	dinerMenu: Menu;
+  pancakeHouseMenu: Menu;
+  dinerMenu: Menu;
 
-	constructor(pancakeHouseMenu: Menu, dinerMenu: Menu) {
-		this.pancakeHouseMenu = pancakeHouseMenu;
-		this.dinerMenu = dinerMenu;
-	}
+  constructor(pancakeHouseMenu: Menu, dinerMenu: Menu) {
+    this.pancakeHouseMenu = pancakeHouseMenu;
+    this.dinerMenu = dinerMenu;
+  }
 
-	printMenu() {
-		const pancakeHouseMenuIterator = this.pancakeHouseMenu.createIterator();
-		const dinerMenuIterator = this.dinerMenu.createIterator();
+  printMenu() {
+    const pancakeHouseMenuIterator = this.pancakeHouseMenu.createIterator();
+    const dinerMenuIterator = this.dinerMenu.createIterator();
 
-		console.log('=== 아침 메뉴 ===');
-		this.printMenu_(pancakeHouseMenuIterator);
+    console.log("=== 아침 메뉴 ===");
+    this.printMenu_(pancakeHouseMenuIterator);
 
-		console.log('=== 점심 메뉴 ===');
-		this.printMenu_(dinerMenuIterator);
-	}
+    console.log("=== 점심 메뉴 ===");
+    this.printMenu_(dinerMenuIterator);
+  }
 
-	printMenu_(iterator: Iterator<MenuItem>) {
-		while (iterator.hasNext()) {
-			const menuItem = iterator.next();
-			console.log(menuItem.getName(), ', ');
-			console.log(menuItem.getPrice(), ' -- ');
-			console.log(menuItem.getDescription());
-		}
-	}
+  printMenu_(iterator: Iterator<MenuItem>) {
+    while (iterator.hasNext()) {
+      const menuItem = iterator.next();
+      console.log(menuItem.getName(), ", ");
+      console.log(menuItem.getPrice(), " -- ");
+      console.log(menuItem.getDescription());
+    }
+  }
 }
 
 const pancakeHouseMenu_ = new PancakeHouseMenu_();
@@ -271,8 +362,10 @@ waitress.printMenu();
 // Java에는 Iterable 기본 인터페이스가 있음
 
 interface Menu {
-	createIterator(): Iterator<MenuItem>;
+  createIterator(): Iterator<MenuItem>;
 }
+
+// 에뉴들을 ArrayList로 묶어서 반복자로 각 메뉴를 대상으로 반복작업 수행
 
 // PancakeHoutMenu -----> Menu <--- Waitress ----> Iterator<MenuItem> <--- DinerMenuIterator
 // DinerMenu ----------->                                             <--- PancakeHouseMenuIterator
@@ -297,3 +390,164 @@ interface Menu {
 // 어떤 모듈이나 클래스의 응집도가 높다는 것은 서로 연관된 기능이 묶여있다는것.
 
 // TODO: 자바스크립트 iterator 기능과 연관이 있는지?
+
+// -------------------------------------------------------------
+
+// 새로운 요구사항: 메뉴 아이템 하위에 서브 메뉴 아이템들이 들어갈 수 있게 수정
+
+// 컴포지트 패턴
+// 객체를 트리구조로 구성해서 부분-전체 계층구조를 구현
+// 컴포지트 패턴을 사용하면 클라이언트에서 개별 객체와 복합 객체를 똑같은 방법으로 다룰 수 있음
+
+// 복합객체(composite)의 구성요소
+//	- Leaf: 자식이 없는 요소
+//	- Composite: 자식이 있는 구성요소의 행동 정의, 자식 구성요소 저장
+
+interface Component {
+  operation(): void;
+  add(component: Component): void;
+  remove(component: Component): void;
+  getChild(index: number): Component;
+}
+
+class Leaf implements Component {
+  operation(): void {
+    console.log("Leaf operation");
+  }
+  add(component: Component): void {
+    console.log("Leaf cannot add component");
+  }
+  remove(component: Component): void {
+    console.log("Leaf cannot remove component");
+  }
+  getChild(index: number): Component {
+    throw new Error("Leaf cannot get child");
+  }
+}
+
+class Composite implements Component {
+  operation(): void {
+    console.log("Composite operation");
+  }
+  add(component: Component): void {
+    console.log("Composite can add component");
+  }
+  remove(component: Component): void {
+    console.log("Composite can remove component");
+  }
+  getChild(index: number): Component {
+    console.log("Composite can get child");
+    return new Leaf();
+  }
+}
+
+// 컴포지트 패턴으로 메뉴 디자인하기
+
+abstract class MenuComponent implements MenuComponent {
+  // 메뉴 아이템 추가/제거/가져오기
+  add(component: MenuComponent): void {
+    throw new Error("Method not implemented.");
+  }
+  remove(component: MenuComponent): void {
+    throw new Error("Method not implemented.");
+  }
+  getChild(index: number): MenuComponent {
+    throw new Error("Method not implemented.");
+  }
+
+  // MenuItem에서 작업처리
+  getName(): string {
+    throw new Error("Method not implemented.");
+  }
+  getDescription(): string {
+    throw new Error("Method not implemented.");
+  }
+  getPrice(): number {
+    throw new Error("Method not implemented.");
+  }
+  isVegetarian(): boolean {
+    throw new Error("Method not implemented.");
+  }
+  print(): void {
+    throw new Error("Method not implemented.");
+  }
+}
+
+class MenuItem_ extends MenuComponent {
+  name: string;
+  description: string;
+  vegetarian: boolean;
+  price: number;
+
+  constructor(
+    name: string,
+    description: string,
+    vegetarian: boolean,
+    price: number,
+  ) {
+    super();
+    this.name = name;
+    this.description = description;
+    this.vegetarian = vegetarian;
+    this.price = price;
+  }
+
+  getName(): string {
+    return this.name;
+  }
+  getDescription(): string {
+    return this.description;
+  }
+  getPrice(): number {
+    return this.price;
+  }
+  isVegetarian(): boolean {
+    return this.vegetarian;
+  }
+  print(): void {
+    console.log(
+      this.getName(),
+      ", ",
+      this.isVegetarian() ? "(v)" : "",
+      this.getPrice(),
+      " -- ",
+      this.getDescription(),
+    );
+  }
+}
+
+class Menu_ extends MenuComponent {
+  menuComponents: MenuComponent[] = [];
+  name: string;
+  description: string;
+
+  constructor(name: string, description: string) {
+    super();
+    this.name = name;
+    this.description = description;
+  }
+
+  add(component: MenuComponent): void {
+    this.menuComponents.push(component);
+  }
+  remove(component: MenuComponent): void {
+    this.menuComponents = this.menuComponents.filter((c) => c !== component);
+  }
+  getChild(index: number): MenuComponent {
+    return this.menuComponents[index]!;
+  }
+  getName(): string {
+    return this.name;
+  }
+  getDescription(): string {
+    return this.description;
+  }
+  print(): void {
+    console.log(this.getName(), ", ", this.getDescription());
+    console.log("--------------------------------");
+
+    this.menuComponents.forEach((component) => {
+      component.print();
+    });
+  }
+}
