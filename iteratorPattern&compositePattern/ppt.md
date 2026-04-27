@@ -1,8 +1,26 @@
-// 컬렉션 관리
-// 반복자 패턴과 컴포지트 패턴
+# 반복자 패턴(IteratorPattern) & 컴포지트 패턴(CompositePattern)
 
-// 요구사항: 아침엔 팬케이크 하우스 메뉴, 점심에는 객체마을 메뉴 사용
+---
 
+# 반복자 패턴이란?
+
+- 컬렌션의 구현방법을 노출하지 않으면서 집합체 내의 모든 항목에 접근하는 방법을 제공
+
+**특징**
+
+- 이 패턴을 사용하면 집합체 내에서 어떤 식으로 일이 처리되는지 전혀 모르는 상태에서 그 안에 들어있는 모든 항목을 대상으로 반복 작업을 수행할 수 있음.
+- 모든 항목에 일일이 접근하는 작업을 컬렉션 객체가 아니라 반복자 객체가 맡게됨.
+- 집합체의 인터페이스와 구현이 간단해지고 반복작업에는 손을 떼고 원래 자신이 할일(객체 컬렉션 관리)에만 전념가능
+
+---
+
+# 책 예시 살펴보기
+
+**요구사항**
+
+리스트를 다르게 다루고 있는 팬케이크하우스, 객체마을 메뉴를 한번에 조회가 되어야함
+
+```ts
 class MenuItem {
 	name: string;
 	description: string;
@@ -33,6 +51,7 @@ class MenuItem {
 	}
 }
 
+// 팬케이크 하우스 메뉴
 class PancakeHouseMenu {
 	menuItems: Map<number, MenuItem> = new Map<number, MenuItem>();
 	count = 0;
@@ -55,6 +74,7 @@ class PancakeHouseMenu {
 	//....기타 메소드들
 }
 
+// 객체마을 메뉴
 class DinerMenu {
 	static readonly MAX_ITEMS = 6;
 	numberOfItems = 0;
@@ -83,16 +103,11 @@ class DinerMenu {
 
 	//....기타 메소드들
 }
+```
 
-// 자바 종업원의 자격 요건
-// printMenu: 메뉴에 있는 모든 항목 출력
-// printBreakfastMenu: 아침 식사 항목만 출력
-// printLunchMenu: 점심 식사 항목만 출력
-// printVegetarianMenu: 채식주의자용 메뉴 출력
-// isItemVegetarian: 항목이 채식주의자용인지 확인
+---
 
-// 1차시도
-
+```ts
 const pancakeHouseMenu = new PancakeHouseMenu();
 const breakfastItems = pancakeHouseMenu.getMenuItems();
 
@@ -112,38 +127,36 @@ for (let i = 0; i < lunchItems.length; i++) {
 	console.log(lunchItems[i]?.getDescription());
 	console.log(lunchItems[i]?.getPrice());
 }
+```
 
-// 위코드의 문제점: 두 메소드의 리턴 형식이 다르기에 각 항목에서 반복 작업을 수행하려면 2개의 순환문을 써야힘
+**위 코드의 문제**
 
-// 반복화를 캡슐화 하기
+두 메소드의 리턴 형식이 다르기에 각 항목에서 반복 작업을 수행하려면 2개의 순환문을 써야힘
+
+---
+
+# 반복화를 캡슐화
+
+```ts
 interface Iterator<T> {
 	hasNext(): boolean; //반복 작업을 적용할 대상이 있는지 확인
 	next(): T; // 다음 객체를 return
 }
+```
 
-// 이 인터페이스가 있으면 배열, 리스트, 해시테이블등 모든 종류의 객체 컬렉션에 반복자를 구현할 수 있음.
+이 인터페이스가 있으면 배열, 리스트, 해시테이블등 모든 종류의 객체 컬렉션에 반복자를 구현할 수 있음.
 
+```ts
 class DinerMenuIterator implements Iterator<MenuItem> {
 	items: MenuItem[];
 	position = 0;
 
-	constructor(items: MenuItem[]) {
+    constructor(items: MenuItem[]) {
 		this.items = items;
 	}
 
-	next(): MenuItem {
-		const menuItem = this.items[this.position];
-		this.position++;
-		return menuItem!;
-	}
-
-	hasNext(): boolean {
-		if (this.position >= this.items.length || this.items[this.position] === undefined) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+	next(): MenuItem {...}
+	hasNext(): boolean {...}
 }
 
 class PancakeHouseMenuIterator implements Iterator<MenuItem> {
@@ -154,48 +167,12 @@ class PancakeHouseMenuIterator implements Iterator<MenuItem> {
 		this.items = items;
 	}
 
-	hasNext(): boolean {
-		if (this.position >= this.items.size || this.items.get(this.position) === undefined) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	next(): MenuItem {
-		const menuItem = this.items.get(this.position);
-		this.position++;
-		return menuItem!;
-	}
+	hasNext(): boolean {...}
+	next(): MenuItem {...}
 }
 
-class DinerMenu_ {
-	static readonly MAX_ITEMS = 6;
-	numberOfItems = 0;
-	menuItems: MenuItem[];
-
-	constructor() {
-		this.menuItems = new Array<MenuItem>(DinerMenu.MAX_ITEMS);
-
-		this.addItem('채식주의자용 BLT', '통밀 위에 베이컨, 상추, 토마토를 얹은 메뉴', true, 3.99);
-		this.addItem('BLT', '통밀 위에 베이컨, 상추, 토마토를 얹은 메뉴', false, 2.99);
-		this.addItem('오늘의 스프', '감자 조림과 토마토 샐러드', false, 3.29);
-		this.addItem('핫도그', '핫도그와 감자튀김', false, 3.05);
-	}
-
-	addItem(name: string, description: string, vegetarian: boolean, price: number) {
-		const menuItem = new MenuItem(name, description, vegetarian, price);
-		if (this.numberOfItems >= DinerMenu.MAX_ITEMS) {
-			console.log('죄송합니다, 메뉴가 꽉 찼습니다. 더 이상 추가할 수 없습니다.');
-		} else {
-			this.menuItems[this.numberOfItems] = menuItem;
-			this.numberOfItems++;
-		}
-	}
-
-	// getMenuItems(): MenuItem[] {
-	// 	return this.menuItems;
-	// }
+class DinerMenu {
+    ...
 
 	createIterator(): Iterator<MenuItem> {
 		return new DinerMenuIterator(this.menuItems);
@@ -203,25 +180,11 @@ class DinerMenu_ {
 }
 
 class PancakeHouseMenu_ {
-	menuItems: Map<number, MenuItem> = new Map<number, MenuItem>();
-	count = 0;
-
-	constructor() {
-		this.addItem('K&B 팬케이크 세트', '스크램블드 에그와 토스트가 곁들여진 팬케이크', false, 2.99);
-		this.addItem('레귤러 팬케이크 세트', '달걀 후라이와 소시지가 곁들여진 팬케이크', false, 3.49);
-		this.addItem('브레드 팬케이크', '취향에 따라 브레드를 선택할 수 있는 팬케이크', true, 3.59);
-	}
-
-	addItem(name: string, description: string, vegetarian: boolean, price: number) {
-		this.menuItems.set(this.count, new MenuItem(name, description, vegetarian, price));
-		this.count++;
-	}
+	...
 
 	createIterator(): Iterator<MenuItem> {
 		return new PancakeHouseMenuIterator(this.menuItems);
 	}
-
-	//....기타 메소드들
 }
 
 class Waitress {
@@ -244,74 +207,69 @@ class Waitress {
 		this.printMenu_(dinerMenuIterator);
 	}
 
-	printMenu_(iterator: Iterator<MenuItem>) {
-		while (iterator.hasNext()) {
-			const menuItem = iterator.next();
-			console.log(menuItem.getName(), ', ');
-			console.log(menuItem.getPrice(), ' -- ');
-			console.log(menuItem.getDescription());
-		}
-	}
+	printMenu_(iterator: Iterator<MenuItem>) {...}
 }
+```
 
-// const pancakeHouseMenu_ = new PancakeHouseMenu_();
-// const dinerMenu_ = new DinerMenu_();
-// const waitress = new Waitress(pancakeHouseMenu_, dinerMenu_);
-// waitress.printMenu();
+---
 
-// 반복자 패턴의 특징
-// 메뉴 구현법이 캡슐화됨. 종업원은 매뉴 항목의 컬렉션을 어떤식으로 저장하는지 알필요 없음.
-// 반복자만 구현한다면 어떤 컬렉션이든 1개의 순환문으로 처리 가능
-// 종업원은 iterator 인터페이스만 알면됨.
+**반복자 패턴의 특징**
 
-// -------------------------------------------------------------
+- 메뉴 구현법이 캡슐화됨. 종업원은 매뉴 항목의 컬렉션을 어떤식으로 저장하는지 알필요 없음.
+- 반복자만 구현한다면 어떤 컬렉션이든 1개의 순환문으로 처리 가능
+- 종업원은 iterator 인터페이스만 알면됨.
 
-// 인터페이스 개선
+**단일 역할 원칙**
 
-// Java에는 Iterable 기본 인터페이스가 있음
+- 어떤 클래스가 바뀌는 이유는 하나뿐이어야 한다
+- 집합체 관리외에 반복자 메소드도 처리하면 2가지 이유로 그 클래스가 바뀔수 있음.
+  1. 컬렉션이 어떤 이유로 바뀔때 클래스가 변경
+  2. 반복자 관련 기능이 바뀔때 클래스가 변경
 
-interface Menu {
-	createIterator(): Iterator<MenuItem>;
+반복자 패턴을 사용하면 단일 역할 원칙을 지키게 됨
+
+---
+
+# Javascript에서 Iterator
+
+**Interator**
+이터레이터는 데이터를 하나씩 순회하기 위한 표준 인터페이스
+
+**기본구조**
+
+```ts
+{
+  value: any,
+  done: boolean
 }
+```
 
-// 에뉴들을 ArrayList로 묶어서 반복자로 각 메뉴를 대상으로 반복작업 수행
+**코드 예시**
 
-// PancakeHoutMenu -----> Menu <--- Waitress ----> Iterator<MenuItem> <--- DinerMenuIterator
-// DinerMenu ----------->                                             <--- PancakeHouseMenuIterator
+```ts
+const arr = [1, 2, 3];
+const iterator = arr[Symbol.iterator]();
 
-// 반복자 패턴
-// 컬렌션의 구현방법을 노출하지 않으면서 집합체 내의 모든 항목에 접근하는 방법을 제공
-// 이 패턴을 사용하면 집합체 내에서 어떤 식으로 일이 처리되는지 전혀 모르는 상태에서 그 안에 들어있는 모든 항목을 대상으로 반복 작업을 수행할 수 있음.
-// 모든 항목에 일일이 접근하는 작업을 컬렉션 객체가 아니라 반복자 객체가 맡게됨.
-// 집합체의 인터페이스와 구현이 간단해지고 반복작업에는 손을 떼고 원래 자신이 할일(객체 컬렉션 관리)에만 전념가능
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: 3, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+```
 
-// 반복자 패턴의 구조
-// 이미지 추가 필요
+- Symbol.iterator를 가지고 있으면 → iterable
+- next()를 호출해서 값을 하나씩 꺼냄
+- 내부 상태를 기억함 (몇 번째까지 읽었는지)
 
-// 단일 역할 원칙
-// 어떤 클래스가 바뀌는 이유는 하나뿐이어야 한다
-// 집합체 관리외에 반복자 메소드도 처리하면 2가지 이유로 그 클래스가 바뀔수 있음.
-// 1) 컬렉션이 어떤 이유로 바뀔때 클래스가 변경
-// 2) 반복자 관련 기능이 바뀔때 클래스가 변경
+---
 
-// 응집도
-// 한클래스 또는 모듈이 특정 목적이나 역할을 얼마나 일관되게 지원하는지를 나타내는 척도
-// 어떤 모듈이나 클래스의 응집도가 높다는 것은 서로 연관된 기능이 묶여있다는것.
+# 컴포지트 패턴
 
-// TODO: 자바스크립트 iterator 기능과 연관이 있는지?
+객체를 트리구조로 구성해서 부분-전체 계층구조를 구현
+컴포지트 패턴을 사용하면 클라이언트에서 개별 객체와 복합 객체를 똑같은 방법으로 다룰 수 있음
 
-// -------------------------------------------------------------
+**복합객체(composite)의 구성요소** - Leaf: 자식이 없는 요소 - Composite: 자식이 있는 구성요소의 행동 정의, 자식 구성요소 저장
 
-// 새로운 요구사항: 메뉴 아이템 하위에 서브 메뉴 아이템들이 들어갈 수 있게 수정
-
-// 컴포지트 패턴
-// 객체를 트리구조로 구성해서 부분-전체 계층구조를 구현
-// 컴포지트 패턴을 사용하면 클라이언트에서 개별 객체와 복합 객체를 똑같은 방법으로 다룰 수 있음
-
-// 복합객체(composite)의 구성요소
-//	- Leaf: 자식이 없는 요소
-//	- Composite: 자식이 있는 구성요소의 행동 정의, 자식 구성요소 저장
-
+```ts
 interface Component {
 	operation(): void;
 	add(component: Component): void;
@@ -349,9 +307,13 @@ class Composite implements Component {
 		return new Leaf();
 	}
 }
+```
 
-// 컴포지트 패턴으로 메뉴 디자인하기
+---
 
+# 컴포지트 패턴으로 메뉴 디자인하기
+
+```ts
 abstract class MenuComponent implements MenuComponent {
 	// 메뉴 아이템 추가/제거/가져오기
 	add(component: MenuComponent): void {
@@ -502,3 +464,4 @@ waitress_.printMenu();
 // 애플 파이 ,  (v) 1.59  --  애플 파이
 // 카페 메뉴 ,  저녁 메뉴
 // --------------------------------
+```
