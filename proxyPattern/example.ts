@@ -85,33 +85,45 @@ interface Icon {
 }
 
 class ImageProxy implements Icon {
-	imageIcon: Icon;
+	imageIcon: Icon | null;
 	imageURL: string;
-	retrievalThread: Thread;
 	retrieving: boolean;
 
 	constructor(url: URL) {
 		this.imageURL = url.toString();
+		this.imageIcon = null;
+		this.retrieving = false;
 	}
 
 	getIconWidth(): number {
-		return this.imageIcon.getIconWidth();
+		if (this.imageIcon !== null) {
+			return this.imageIcon.getIconWidth();
+		}
+		return 800;
 	}
 
 	getIconHeight(): number {
-		return this.imageIcon.getIconHeight();
+		if (this.imageIcon !== null) {
+			return this.imageIcon.getIconHeight();
+		}
+		return 600;
 	}
 
 	setImageIcon(icon: Icon) {
 		this.imageIcon = icon;
 	}
 
-	printIcon(c:CompletionEntry, g:Graphics, y:number): void {
-		if(imageIcon != null){
-			retrievalThread = new Thread(this.imageURL);
-			retrievalThread.start();
-			retrieving = true;
+	printIcon(): void {
+		if (this.imageIcon !== null) {
+			this.imageIcon.printIcon();
+		} else if (!this.retrieving) {
+			this.retrieving = true;
+			// 이미지를 비동기적으로 로딩 (Java의 Thread를 setTimeout으로 대체)
+			setTimeout(() => {
+				console.log(`이미지 로딩 완료: ${this.imageURL}`);
+				this.retrieving = false;
+			}, 1000);
+			console.log(`이미지 로딩 중: ${this.imageURL}`);
 		}
-		
 	}
 }
